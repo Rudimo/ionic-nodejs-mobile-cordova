@@ -7,5 +7,9 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Janea Systems Inc.",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "mongodb": "3.0.1",
+        "tcp-ping": "0.1.1"
+    }
 }

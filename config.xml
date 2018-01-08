@@ -85,5 +85,4 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="nodejs-mobile-cordova" spec="^0.1.2" />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
-    <plugin name="cordova-sqlite-storage" spec="^2.2.0" />
 </widget>
