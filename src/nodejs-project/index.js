@@ -6,6 +6,8 @@ const cordova     = require('cordova-bridge');
 
 const log = (type, msg) => {
 
+    msg = new Date().toTimeString() + ': ' + msg;
+
     cordova.channel.send(JSON.stringify({type, msg}));
 };
 
@@ -36,6 +38,10 @@ cordova.channel.on('message', msg => {
 
             connect();
         });
+
+    } else if (msg === 'connect-with-set-immediate') {
+
+        setImmediate(connect);
 
     } else if (msg === 'connect-without-tcp-ping') {
 
