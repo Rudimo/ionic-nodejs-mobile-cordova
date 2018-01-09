@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, Platform } from 'ionic-angular';
 
 declare const nodejs: any;
 
@@ -41,8 +41,8 @@ export class HomePage {
         }
     }
 
-    public connect() {
+    public connect(msg) {
 
-        nodejs.channel.send('connect');
+        nodejs.channel.send(msg);
     }
 }

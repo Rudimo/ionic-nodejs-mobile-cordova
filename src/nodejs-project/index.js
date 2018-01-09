@@ -1,58 +1,47 @@
-const MongoClient = require('mongodb').MongoClient;
-const tcpp = require('tcp-ping');
+'use strict';
 
-const cordova = require('cordova-bridge');
+const MongoClient = require('mongodb').MongoClient;
+const tcpp        = require('tcp-ping');
+const cordova     = require('cordova-bridge');
+
+const log = (type, msg) => {
+
+    cordova.channel.send(JSON.stringify({type, msg}));
+};
 
 process.on('uncaughtException', err => {
 
-    // TODO: Report this error
     console.log('NodeJS FATAL error!!!');
     console.log(err);
 
     throw err;
 });
 
-cordova.channel.on('message', function (msg) {
+const mongoDBUri = `mongodb://test:test@ds247077.mlab.com:47077/nodejs-mobile-testing`;
 
-    const mongoDBUri = '';
+cordova.channel.on('message', msg => {
 
-    const options = {
-        validateOptions: true,
-        ssl: true,
-        reconnectTries: 1,
-        poolSize: 1
-    };
+    if (msg === 'connect-after-tcp-ping') {
 
-    MongoClient.connect(mongoDBUri, options, (err, client) => {
+        tcpp.probe('ds247077.mlab.com', 47077, (err, available) => {
+            if (err) return log('error', err.message);
+
+            log('debug', 'available [ds247077.mlab.com]: ' + available);
+
+            connect();
+        });
+
+    } else if (msg === 'connect-without-tcp-ping') {
+
+        connect();
+    }
+});
+
+function connect() {
+
+    MongoClient.connect(mongoDBUri, (err, client) => {
         if (err) return log('error', err.message);
 
         log(`debug`, `Connected correctly to server`);
-
-        this.client = client;
-
-        const adminDb = this.client.db('admin').admin();
-
-        adminDb.buildInfo((err, info) => {
-            if (err) return callback(err);
-
-            log(`debug`, `mongoDB version: ${info.version}`);
-        });
     });
-});
-
-log = function (type, msg) {
-    cordova.channel.send(JSON.stringify({
-        type,
-        msg
-    }));
-};
-
-setTimeout(() => {
-
-    // tcpp.probe('google.com', 80, (err, available) => {
-    //     if (err) return log('error', err.message);
-    //
-    //     log('debug', 'available [google.com]: ' + available);
-    // });
-
-}, 5000);
+}
